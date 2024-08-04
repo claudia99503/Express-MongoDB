@@ -16,7 +16,7 @@ app.get('/tasks', (req, res) => {
         sort === 'oldest'
             ? (a, b) => a.createdAt - b.createdAt
             : (a, b) => b.createdAt - a.createdAt;
-    
+
     let newTasks = tasks.sort(compareFn);
 
     if (count) {
@@ -24,6 +24,16 @@ app.get('/tasks', (req, res) => {
     }
 
     res.send(newTasks);
+});
+
+app.get('/tasks/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const task = tasks.find((task) => task.id === id);
+    if (task) {
+        res.send(task);
+    } else {
+        res.status(404).send({ message: 'Cannot find given id . '});
+    }
 });
 
 app.listen(3000, () => console.log('Sever Started'));

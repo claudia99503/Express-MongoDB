@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ###
 
-PATCH http://localhost:3000/tasks/1
+PATCH http://localhost:3000/tasks/66af4455f4979151e4ee9e17
 Content-Type: application/json
 
 {
@@ -29,4 +29,4 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/tasks/1
+DELETE http://localhost:3000/tasks/66af4455f4979151e4ee9e17

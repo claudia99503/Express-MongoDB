@@ -2,6 +2,7 @@ import express from 'express';
 import tasks from './data/mock.js';
 
 const app = express();
+app.use(express.json());
 
 app.get('/tasks', (req, res) => {
     /**
@@ -34,6 +35,18 @@ app.get('/tasks/:id', (req, res) => {
     } else {
         res.status(404).send({ message: 'Cannot find given id . '});
     }
+});
+
+app.post('/tasks', (req, res) => {
+    const newTask = req.body;
+    const ids = tasks.map((task) => task.id);
+    newTask.id = Math.max(...ids) + 1;
+    newTask.isComplete = false;
+    newTask.createdAt = new Date();
+    newTask.updatedAt = new Date();
+
+    tasks.push(newTask);
+    res.status(201).send(newTask);
 });
 
 app.listen(3000, () => console.log('Sever Started'));

@@ -17,3 +17,13 @@ Content-Type: application/json
     "title": "호텔 예약하기",
     "description": "호텔을 예약하자"
 }
+
+###
+
+PATCH http://localhost:3000/tasks/1
+Content-Type: application/json
+
+{
+    "title": "1시간 운동",
+    "descripttion": "열심히 운동하기"
+}

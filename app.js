@@ -63,5 +63,16 @@ app.patch('/tasks/:id', (req, res) => {
     }
 });
 
+app.delete('/tasks/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const idx = tasks.findIndex((task) => task.id === id);
+    if (idx >= 0) {
+        tasks.splice(idx, 1);
+        res.sendStatus(204);
+    } else {
+        res.status(404).send({ message: 'Cannot find given id . '});
+    }
+});
+
 app.listen(3000, () => console.log('Sever Started'));
 

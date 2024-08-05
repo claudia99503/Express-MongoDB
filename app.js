@@ -9,7 +9,23 @@ mongoose.connect(DATABASE_URL).then(() => console.log('Connected to DB'));
 const app = express();
 app.use(express.json());
 
-app.get('/tasks', async (req, res) => {
+function asyncHandler(handler) {
+    return async function (req, res) {
+        try {
+            await handler(req, res);
+        } catch (e) {
+           if (e.name === 'ValidationError') {
+            res.status(400).send({ message: e.message });
+           } else if (e.name === 'CastError') {
+            res.status(404).send({ message: 'Cannot find given id. '});
+           } else {
+            res.status(500).send({ message: e.message});
+           }
+        }
+    }
+}
+
+app.get('/tasks', asyncHandler(async (req, res) => {
     /**
      * 쿼리 파라미터
      * - sort: 'oldest'인 경우 오래된 태스크 기준, 나머지 경우 새로운 태스크 기준
@@ -24,9 +40,9 @@ app.get('/tasks', async (req, res) => {
     const tasks = await Task.find().sort(sortOption).limit(count);
 
     res.send(tasks);
-});
+}));
 
-app.get('/tasks/:id', async (req, res) => {
+app.get('/tasks/:id', asyncHandler(async (req, res) => {
     const id = req.params.id;
     const task = await Task.findById(id);
     if (task) {
@@ -34,12 +50,12 @@ app.get('/tasks/:id', async (req, res) => {
     } else {
         res.status(404).send({ message: 'Cannot find given id . '});
     }
-});
+}));
 
-app.post('/tasks', async (req, res) => {
+app.post('/tasks', asyncHandler(async (req, res) => {
     const newTask = await Task.create(req.body)
     res.status(201).send(newTask);
-});
+}));
 
 app.patch('/tasks/:id', (req, res) => {
     const id = Number(req.params.id);
